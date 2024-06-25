@@ -1,4 +1,3 @@
-from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -69,8 +68,10 @@ class Animate2D:
         
         self.dynamics = dynamics
         self.fig, self.ax = plt.subplots()
-        self.ax.set_xlim(-20, 20)
-        self.ax.set_ylim(-20, 20)
+        
+        axis_limit = max(np.linalg.norm(dynamics.positions, axis=1))
+        self.ax.set_xlim(-3*axis_limit, 3*axis_limit)
+        self.ax.set_ylim(-3*axis_limit, 3*axis_limit)
         
         self.ax.set_xlabel('X')
         self.ax.set_ylabel('Y')
@@ -120,7 +121,7 @@ class Animate2D:
         self.body3.set_data([positions[2, 0]], [positions[2, 1]])
         
         self.center_of_mass_marker.set_data([center_of_mass[0]], [center_of_mass[1]])
-
+        
         return self.line1, self.line2, self.line3, self.body1, self.body2, self.body3, self.center_of_mass_marker
 
     def start_animation(self):
@@ -216,7 +217,7 @@ class Animate3D:
         plt.legend()
         plt.show()
         
-    
+
 masses = [1e5, 3e5, 4e4]
 tick = 0.001
 
@@ -231,5 +232,3 @@ initial_velocity2D = np.array([[-5,-5,0],[-20,-5,0],[30,20,0]])
 planet_system = Dynamics(masses, initial_positions2D, initial_velocity2D, tick)
 animation = Animate2D(planet_system)
 animation.start_animation()
-
-
